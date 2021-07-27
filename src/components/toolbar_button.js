@@ -25,7 +25,7 @@ export default function ToolbarButton({icon, onPress}) {
 
 const styles = StyleSheet.create({
     container: {
-        marginLeft: 25
+        marginRight: 15
     },
     icon: {
       color: "white",

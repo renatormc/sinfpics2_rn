@@ -3,13 +3,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Header from './header';
 import BottomSheet from "./bottom_sheet"
-// import ImagePicker from 'react-native-image-picker';
-import { launchCamera } from 'react-native-image-picker';
-import ImageViewer from 'react-native-image-zoom-viewer'
-import prompt from 'react-native-prompt-android'
-import { savePicture, getPics, clearFolder, deletePicture, renamePicture, PICS_FOLDER } from "../../services/storage_manager"
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import prompt from 'react-native-prompt-android';
+import { savePicture, getPics, clearFolder, deletePicture, renamePicture, PICS_FOLDER, saveNote } from "../../services/storage_manager";
 
-const HomeScreen = ({ navigation }) => {
+
+const CaseScreen = ({ route, navigation }) => {
+
+  // const navigation = useNavigation();
 
   const [objName, setObjName] = useState("");
   const [pics, setPics] = useState([]);
@@ -17,13 +19,11 @@ const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [imageModalUrl, setImageModalUrl] = useState("");
   const refRBSheet = useRef();
-
+  const caseName = route.params.caseName;
 
   const reloadPics = async () => {
-    console.log("Reload pics")
-    // setSelectedPicIndex(Math.random())
     try {
-      const pics = await getPics();
+      const pics = await getPics(caseName);
       setPics(pics)
     } catch (error) {
       console.log(error)
@@ -43,8 +43,8 @@ const HomeScreen = ({ navigation }) => {
         },
         {
           text: 'SIM', onPress: async () => {
-            await clearFolder()
-            reloadPics()
+            await clearFolder(caseName);
+            reloadPics();
           }
         }
       ],
@@ -96,7 +96,7 @@ const HomeScreen = ({ navigation }) => {
           } else {
             const uri = response.assets[0].uri
             try {
-              const info = await savePicture(uri, objName);
+              const info = await savePicture(uri, objName, caseName);
               let number = Math.random();
               setPics([...pics, { source: "file://" + info.path + "#" + number, name: info.name }]);
             } catch (error) {
@@ -112,8 +112,60 @@ const HomeScreen = ({ navigation }) => {
     } catch (err) {
       console.warn(err);
     }
+  }
+
+  const pickPictures = async () => {
+    if (objName == "") {
+      Alert.alert(
+        'Nome vazio',
+        'É necessário definir o nome do objeto.',
+        [
+          {
+            text: 'OK',
+            onPress: () => { }
+          }
+        ],
+        { cancelable: false }
+      );
+      return
+    }
+    try {
+      launchImageLibrary({
+        selectionLimit: 0,
+        storageOptions: {
+          skipBackup: true,
+          path: '/storage/emulated/0/DCIM'
+        },
+      }, async (response) => {
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.error) {
+          console.log('ImagePicker Error: ', response.error);
+        } else if (response.customButton) {
+          console.log('User tapped custom button: ', response.customButton);
+        } else {
+          let assets = response.assets;
+          let newPics = [];
+          for (let index = 0; index < assets.length; index++) {
+            const uri = assets[index].uri;
+            try {
+              const info = await savePicture(uri, objName, caseName);
+              let number = Math.random();
+              newPics.push({ source: "file://" + info.path + "#" + number, name: info.name });
+
+            } catch (error) {
+              console.log(error)
+            }
+          }
+          setPics([...pics, ...newPics]);
 
 
+
+        }
+      });
+    } catch (err) {
+      console.warn(err);
+    }
   }
 
   const deletePic = async () => {
@@ -143,7 +195,7 @@ const HomeScreen = ({ navigation }) => {
               return
             }
             try {
-              const source = await renamePicture(pic, name)
+              const source = await renamePicture(pic, name, caseName)
               let copyPics = [...pics];
               copyPics[selectedPicIndex] = {
                 source: source,
@@ -167,19 +219,35 @@ const HomeScreen = ({ navigation }) => {
 
   }
 
-  const vizualizePic = async () => {
+  const vizualizePic = async (pic) => {
+    if (pic == undefined) {
+      pic = pics[selectedPicIndex];
+    }
+    refRBSheet.current.close();
+    setImageModalUrl(pic.source);
+    setModalVisible(true);
+  }
 
+  const goToCases = async () => {
+    console.log("Ir para casos")
+    navigation.navigate('Home');
+  }
+
+  const editNote = async () => {
+    navigation.navigate('Note', {
+      caseName: caseName,
+      picName: pics[selectedPicIndex].name
+  });
   }
 
   useEffect(() => {
     reloadPics();
   }, []);
 
-  // reloadPics();
 
   return (
     <View style={styles.container}>
-      <Header onClear={clearFolderWrap} onTakePicture={takePicture} onReload={reloadPics} />
+      <Header title={caseName} onClear={clearFolderWrap} onTakePicture={takePicture} onReload={reloadPics} onChoosePhoto={pickPictures} onBack={goToCases} />
       <TextInput
         style={styles.input}
         onChangeText={setObjName}
@@ -197,7 +265,7 @@ const HomeScreen = ({ navigation }) => {
               delayLongPress={200}
               onPress={() => {
                 setSelectedPicIndex(index)
-                vizualizePic(index)
+                vizualizePic(item)
               }}
               onLongPress={() => {
                 setSelectedPicIndex(index);
@@ -235,7 +303,7 @@ const HomeScreen = ({ navigation }) => {
           container: {
             justifyContent: "flex-start",
             alignItems: "flex-start",
-            height: 200
+            height: 250
           }
         }}
       >
@@ -243,6 +311,7 @@ const HomeScreen = ({ navigation }) => {
           onDeletePress={deletePic}
           onVizualizePress={vizualizePic}
           onRenamePress={renamePic}
+          onEditNote={editNote}
         />
       </RBSheet>
     </View>
@@ -280,4 +349,4 @@ const styles = StyleSheet.create({
 
 })
 
-export default HomeScreen;
+export default CaseScreen;

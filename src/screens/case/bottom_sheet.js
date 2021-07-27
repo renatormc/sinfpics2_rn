@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { TouchableOpacity, StyleSheet, View, Text, Dimensions } from 'react-native'
-import Icon from 'react-native-vector-icons/AntDesign'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 
-export default function BottomSheed({onVizualizePress, onDeletePress, onRenamePress}) {
+export default function BottomSheed({onVizualizePress, onDeletePress, onRenamePress, onEditNote}) {
     return (
         <View style={styles.container}>
 
@@ -12,7 +12,7 @@ export default function BottomSheed({onVizualizePress, onDeletePress, onRenamePr
                 onPress={onVizualizePress}
             >
                 <View style={styles.itemContainer}>
-                    <Icon style={styles.itemIcon} name="eye" size={18} />
+                    <Icon style={styles.itemIcon} name="visibility" size={18} />
                     <Text style={styles.text}>
                         Vizualizar
                     </Text>
@@ -39,6 +39,17 @@ export default function BottomSheed({onVizualizePress, onDeletePress, onRenamePr
                     <Icon style={styles.itemIcon} name="edit" size={18} />
                     <Text style={styles.text}>
                         Renomear
+                    </Text>
+                </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={styles.item}
+                onPress={onEditNote}
+            >
+                <View style={styles.itemContainer}>
+                    <Icon style={styles.itemIcon} name="description" size={18} />
+                    <Text style={styles.text}>
+                        Editar nota
                     </Text>
                 </View>
             </TouchableOpacity>

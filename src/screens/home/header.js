@@ -3,17 +3,13 @@ import * as React from 'react';
 import ToolbarButton from '../../components/toolbar_button';
 
 
-export default function Header({ onTakePicture, onReload, onClear, onChoosePhoto }) {
+export default function Header({ onReload }) {
 
   return (
     <View style={styles.header}>
-      <Text style={styles.headerText}>Sinfpics</Text>
+      <Text style={styles.headerText}>Casos</Text>
       <View style={styles.buttonsContainer}>
-
-        <ToolbarButton icon="delete" onPress={onClear} />
         <ToolbarButton icon="refresh" onPress={onReload} />
-        <ToolbarButton icon="collections" onPress={onChoosePhoto} />
-        <ToolbarButton icon="photo-camera" onPress={onTakePicture} />
       </View>
     </View>
   );
@@ -26,7 +22,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     flexDirection: "row",
-    backgroundColor: "blue",
+    backgroundColor: "#1976d2",
     alignItems: "center",
     justifyContent: "space-between",
   },
@@ -37,7 +33,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 15,
     color: "white"
   },
 })
