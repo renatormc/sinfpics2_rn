@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { TouchableOpacity, StyleSheet, View, Text, Dimensions } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import values from '../../values';
@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
     item: {
         width: Dimensions.get('window').width / 2,
         padding: 15,
-        borderBottomWidth: 1,
-        borderColor: values.green_color,
+        // borderBottomWidth: 1,
+        // borderColor: values.green_color,
         width: "100%"
     },
     text: {

@@ -75,8 +75,8 @@ const styles = StyleSheet.create({
     item: {
         width: Dimensions.get('window').width / 2,
         padding: 15,
-        borderBottomWidth: 1,
-        borderColor: values.green_color,
+        // borderBottomWidth: 1,
+        // borderColor: values.green_color,
         width: "100%"
     },
     text: {

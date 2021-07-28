@@ -1,5 +1,7 @@
 import * as RNFS from 'react-native-fs';
 import RNFU from 'react-native-file-utils';
+import sinitize from 'sanitize-filename';
+import sanitize from 'sanitize-filename';
 
 
 const PICS_FOLDER = `${RNFU.PicturesDirectoryPath}/casepics`
@@ -25,19 +27,37 @@ const clearFolder = async (caseName) => {
     });
 }
 
-const deletePicture = async (pic) => {
-    const path = pic.source.replace("file://", "").split("#")[0]
-    await RNFS.unlink(path)
+const deletePicture = async (picName, caseName) => {
+    const caseFolder = `${PICS_FOLDER}/${caseName}`;
+    const picPath = `${caseFolder}/${picName}.jpg`
+    const notePath = `${caseFolder}/${picName}.txt`
+    await RNFS.unlink(picPath)
+    if (await RNFS.exists(notePath)){
+        await RNFS.unlink(notePath)
+    }
+    
 }
 
 
-async function renamePicture(pic, name, caseName) {
-    const path = pic.source.replace("file://", "").split("#")[0]
-    const info = await savePicture(path, name, caseName)
-    return "file://" + info.path + "#" + Math.random()
+async function renamePicture(oldName, newName, caseName) {
+    newName = sanitize(newName);
+    const caseFolder = `${PICS_FOLDER}/${caseName}`;
+    const oldPicPath = `${caseFolder}/${oldName}.jpg`
+    const oldNotePath = `${caseFolder}/${oldName}.txt`
+    const newPicPath = `${caseFolder}/${newName}.jpg`
+    const newNotePath = `${caseFolder}/${newName}.txt`
+    await RNFS.moveFile(oldPicPath, newPicPath);
+    if (await RNFS.exists(oldNotePath)){
+        await RNFS.moveFile(oldNotePath, newNotePath);
+    }
+    return {
+        newName: newName, 
+        newPicPath: newPicPath
+    }
 }
 
 async function savePicture(tempPath, name, caseName) {
+    name = sanitize(name);
     let caseFolder = `${PICS_FOLDER}/${caseName}`;
     await prepareFolder(caseFolder);
     let newName = name
@@ -89,6 +109,7 @@ const getCases = async () => {
 }
 
 const createCase = async (name) => {
+    name = sanitize(name);
     const path = `${PICS_FOLDER}/${name}`;
     const exists = await RNFS.exists(path);
     if (!exists) {

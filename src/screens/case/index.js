@@ -172,7 +172,7 @@ const CaseScreen = ({ route, navigation }) => {
   const deletePic = async () => {
     refRBSheet.current.close();
     try {
-      await deletePicture(pics[selectedPicIndex])
+      await deletePicture(pics[selectedPicIndex].name, caseName)
       pics.splice(selectedPicIndex, 1)
       setPics(pics);
       setSelectedPicIndex(-1);
@@ -196,7 +196,9 @@ const CaseScreen = ({ route, navigation }) => {
               return
             }
             try {
-              const source = await renamePicture(pic, name, caseName)
+              const {newName, newPicPath} = await renamePicture(pic.name, name, caseName)
+              console.log(newPicPath)
+              const source = "file://" + newPicPath + "#" + Math.random();
               let copyPics = [...pics];
               copyPics[selectedPicIndex] = {
                 source: source,
