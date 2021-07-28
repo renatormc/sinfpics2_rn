@@ -2,7 +2,7 @@ import * as RNFS from 'react-native-fs';
 import RNFU from 'react-native-file-utils';
 
 
-const PICS_FOLDER = `${RNFU.PicturesDirectoryPath}/sinfpics`
+const PICS_FOLDER = `${RNFU.PicturesDirectoryPath}/casepics`
 
 const getPics = async (caseName) => {
     let caseFolder = `${PICS_FOLDER}/${caseName}`;
@@ -118,7 +118,7 @@ const renameCase = async (oldName, newName) => {
 const saveNote = async (name, caseName, text) => {
     const path = `${PICS_FOLDER}/${caseName}/${name}.txt`;
     text = text.trim();
-    if (text == ""){
+    if (text == "") {
         const exists = await RNFS.exists(path);
         if (exists) {
             await RNFS.unlink(path);
@@ -126,6 +126,15 @@ const saveNote = async (name, caseName, text) => {
         return
     }
     RNFS.writeFile(path, text, 'utf8')
+}
+
+const getNote = async (name, caseName) => {
+    const path = `${PICS_FOLDER}/${caseName}/${name}.txt`;
+    const exists = await RNFS.exists(path);
+    if (exists) {
+        return await RNFS.readFile(path, 'utf8');
+    }
+    return ""
 }
 
 
@@ -141,5 +150,6 @@ export {
     deleteCase,
     createCase,
     renameCase,
-    saveNote
+    saveNote, 
+    getNote
 }

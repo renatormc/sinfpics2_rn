@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native';
 import * as React from 'react';
 import ToolbarButton from '../../components/toolbar_button';
+import values from '../../values';
 
 
 export default function Header({ onTakePicture, onReload, onClear, onChoosePhoto, onBack, title }) {
@@ -30,7 +31,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 50,
     flexDirection: "row",
-    backgroundColor: "#1976d2",
+    backgroundColor: values.blue_color,
     alignItems: "center",
     justifyContent: "space-between",
   },

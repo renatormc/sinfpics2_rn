@@ -7,6 +7,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import prompt from 'react-native-prompt-android';
 import { savePicture, getPics, clearFolder, deletePicture, renamePicture, PICS_FOLDER, saveNote } from "../../services/storage_manager";
+import values from '../../values';
 
 
 const CaseScreen = ({ route, navigation }) => {
@@ -237,7 +238,7 @@ const CaseScreen = ({ route, navigation }) => {
     navigation.navigate('Note', {
       caseName: caseName,
       picName: pics[selectedPicIndex].name
-  });
+    });
   }
 
   useEffect(() => {
@@ -276,7 +277,7 @@ const CaseScreen = ({ route, navigation }) => {
                 <Image
                   style={styles.listPicture}
                   source={{ uri: item.source }} />
-                <Text>{item.name}</Text>
+                <Text style={styles.listImageText}>{item.name}</Text>
               </View>
 
             </TouchableOpacity>
@@ -303,7 +304,7 @@ const CaseScreen = ({ route, navigation }) => {
           container: {
             justifyContent: "flex-start",
             alignItems: "flex-start",
-            height: 250
+            height: 230
           }
         }}
       >
@@ -323,13 +324,15 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     flexDirection: "column",
+    backgroundColor: "white"
   },
   input: {
     height: 40,
     borderBottomWidth: 1,
-    borderBottomColor: "grey",
+    borderBottomColor: values.green_color,
     paddingLeft: 5,
     paddingRight: 5,
+    fontSize: 15
   },
   listPicture: {
     flex: 1,
@@ -345,6 +348,10 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     alignContent: "center"
+  },
+  listImageText: {
+    color: values.green_color,
+    fontWeight: "bold"
   }
 
 })

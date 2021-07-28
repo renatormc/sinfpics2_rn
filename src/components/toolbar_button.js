@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import * as React from 'react';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import values from '../values';
 
 
 export default function ToolbarButton({icon, onPress}) {
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
         marginRight: 15
     },
     icon: {
-      color: "white",
+      color: values.gold_color,
       fontSize: 30
     },
   })

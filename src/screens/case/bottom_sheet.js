@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { TouchableOpacity, StyleSheet, View, Text, Dimensions } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-
+import values from '../../values';
 
 export default function BottomSheed({onVizualizePress, onDeletePress, onRenamePress, onEditNote}) {
     return (
@@ -62,7 +62,10 @@ const styles = StyleSheet.create({
     container: {
         justifyContent: "flex-start",
         alignContent: "flex-start",
-        flexDirection: "column"
+        flexDirection: "column",
+        backgroundColor: values.blue_color,
+        width: "100%",
+        height: "100%"
     },
 
     itemContainer: {
@@ -71,13 +74,18 @@ const styles = StyleSheet.create({
     },
     item: {
         width: Dimensions.get('window').width / 2,
-        padding: 15
+        padding: 15,
+        borderBottomWidth: 1,
+        borderColor: values.green_color,
+        width: "100%"
     },
     text: {
         fontSize: 18,
-        marginLeft: 30
+        marginLeft: 30,
+        color: values.gold_color
     },
     itemIcon: {
-        color: "grey"
+        color: "grey",
+        color: values.gold_color
     }
 });

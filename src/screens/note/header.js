@@ -4,13 +4,13 @@ import ToolbarButton from '../../components/toolbar_button';
 import values from '../../values';
 
 
-export default function Header({ onReload }) {
+export default function Header({ onSave, title }) {
 
   return (
     <View style={styles.header}>
-      <Text style={styles.headerText}>Casos</Text>
+      <Text style={styles.headerText}>{title}</Text>
       <View style={styles.buttonsContainer}>
-        <ToolbarButton icon="refresh" onPress={onReload} />
+        <ToolbarButton icon="save" onPress={onSave} />
       </View>
     </View>
   );
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontWeight: 'bold',
-    fontSize: 20,
-    color: values.gold_color
+    fontSize: 15,
+    color: "white"
   },
 })

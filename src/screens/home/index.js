@@ -6,6 +6,7 @@ import BottomSheet from "./bottom_sheet";
 import RBSheet from "react-native-raw-bottom-sheet";
 import prompt from 'react-native-prompt-android';
 import Header from './header';
+import values from '../../values';
 
 
 const HomeScreen = ({navigation}) => {
@@ -143,7 +144,7 @@ const HomeScreen = ({navigation}) => {
                     container: {
                         justifyContent: "flex-start",
                         alignItems: "flex-start",
-                        height: 200
+                        height: 120
                     }
                 }}
             >
@@ -154,7 +155,7 @@ const HomeScreen = ({navigation}) => {
                 style={styles.fab}
                 onPress={addNew}
             >
-                <Icon name='add' size={30} color='white' />
+                <Icon style={styles.fabIcon} name='add' size={30} color='white' />
             </TouchableOpacity>
         </View>
     );
@@ -174,9 +175,13 @@ const styles = StyleSheet.create({
         paddingRight: 5,
         paddingTop: 15,
         paddingBottom: 15,
+        flexDirection: "row",
+        justifyContent: "center"
     },
     listText: {
-        fontSize: 15
+        fontSize: 15,
+        fontWeight: "bold",
+        color: values.green_color
     },
     fab: {
         borderWidth: 1,
@@ -188,8 +193,11 @@ const styles = StyleSheet.create({
         bottom: 10,
         right: 10,
         height: 70,
-        backgroundColor: '#1976d2',
+        backgroundColor: values.blue_color,
         borderRadius: 100,
+    },
+    fabIcon: {
+        color: values.gold_color
     }
 
 });
