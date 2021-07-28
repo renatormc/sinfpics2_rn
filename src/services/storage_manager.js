@@ -1,6 +1,6 @@
 import * as RNFS from 'react-native-fs';
-import RNFU from 'react-native-file-utils';
-import sinitize from 'sanitize-filename';
+import { PermissionsAndroid } from 'react-native';
+
 import sanitize from 'sanitize-filename';
 
 
@@ -33,10 +33,10 @@ const deletePicture = async (picName, caseName) => {
     const picPath = `${caseFolder}/${picName}.jpg`
     const notePath = `${caseFolder}/${picName}.txt`
     await RNFS.unlink(picPath)
-    if (await RNFS.exists(notePath)){
+    if (await RNFS.exists(notePath)) {
         await RNFS.unlink(notePath)
     }
-    
+
 }
 
 
@@ -48,11 +48,11 @@ async function renamePicture(oldName, newName, caseName) {
     const newPicPath = `${caseFolder}/${newName}.jpg`
     const newNotePath = `${caseFolder}/${newName}.txt`
     await RNFS.moveFile(oldPicPath, newPicPath);
-    if (await RNFS.exists(oldNotePath)){
+    if (await RNFS.exists(oldNotePath)) {
         await RNFS.moveFile(oldNotePath, newNotePath);
     }
     return {
-        newName: newName, 
+        newName: newName,
         newPicPath: newPicPath
     }
 }
@@ -82,18 +82,33 @@ async function savePicture(tempPath, name, caseName) {
     }
 }
 
+const permissionWriteExternalStorage = async () => {
+    const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+    )
+    return granted === PermissionsAndroid.RESULTS.GRANTED
+}
+
 const prepareFolder = async (folder) => {
     if (folder !== undefined) {
         const exists = await RNFS.exists(folder)
         if (!exists) {
-            await RNFS.mkdir(folder)
+            perm = await permissionWriteExternalStorage();
+            if (perm) {
+                await RNFS.mkdir(folder);
+            }
+
         }
         return
     }
     //Case folder not provided check the main folder
     const exists = await RNFS.exists(PICS_FOLDER)
     if (!exists) {
-        await RNFS.mkdir(PICS_FOLDER)
+        perm = await permissionWriteExternalStorage();
+        if (perm) {
+            await RNFS.mkdir(PICS_FOLDER);
+        }
+
     }
 
 }
@@ -114,7 +129,11 @@ const createCase = async (name) => {
     const path = `${PICS_FOLDER}/${name}`;
     const exists = await RNFS.exists(path);
     if (!exists) {
-        await RNFS.mkdir(path);
+        perm = await permissionWriteExternalStorage();
+        if (perm) {
+            await RNFS.mkdir(path);;
+        }
+
     }
     return name;
 }
@@ -172,6 +191,6 @@ export {
     deleteCase,
     createCase,
     renameCase,
-    saveNote, 
+    saveNote,
     getNote
 }
