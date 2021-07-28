@@ -1,4 +1,4 @@
-import { TextInput, View, StyleSheet, Text, SafeAreaView, FlatList, TouchableOpacity, Modal, Alert, PermissionsAndroid, Image } from 'react-native';
+import { TextInput, View, StyleSheet, Text, SafeAreaView, FlatList, TouchableOpacity, Modal, Alert, PermissionsAndroid, Image, useWindowDimensions } from 'react-native';
 import React, { useState, useRef, useEffect } from 'react';
 import RBSheet from "react-native-raw-bottom-sheet";
 import Header from './header';
@@ -21,6 +21,8 @@ const CaseScreen = ({ route, navigation }) => {
   const [imageModalUrl, setImageModalUrl] = useState("");
   const refRBSheet = useRef();
   const caseName = route.params.caseName;
+  const windowWidth = useWindowDimensions().width;
+  const window = useWindowDimensions();
 
   const reloadPics = async () => {
     try {
@@ -196,7 +198,7 @@ const CaseScreen = ({ route, navigation }) => {
               return
             }
             try {
-              const {newName, newPicPath} = await renamePicture(pic.name, name, caseName)
+              const { newName, newPicPath } = await renamePicture(pic.name, name, caseName)
               console.log(newPicPath)
               const source = "file://" + newPicPath + "#" + Math.random();
               let copyPics = [...pics];
@@ -278,6 +280,7 @@ const CaseScreen = ({ route, navigation }) => {
               <View style={styles.listItemInnerContainer}>
                 <Image
                   style={styles.listPicture}
+                  width={window.width*0.3}
                   source={{ uri: item.source }} />
                 <Text style={styles.listImageText}>{item.name}</Text>
               </View>
@@ -338,7 +341,7 @@ const styles = StyleSheet.create({
   },
   listPicture: {
     flex: 1,
-    width: '100%',
+    // width: Dimensions.get('window').width * 0.3,
     height: undefined,
     aspectRatio: 1,
   },

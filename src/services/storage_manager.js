@@ -4,7 +4,8 @@ import sinitize from 'sanitize-filename';
 import sanitize from 'sanitize-filename';
 
 
-const PICS_FOLDER = `${RNFU.PicturesDirectoryPath}/casepics`
+// const PICS_FOLDER = `${RNFU.PicturesDirectoryPath}/casepics`
+const PICS_FOLDER = "/storage/emulated/0/Pictures/casepics"
 
 const getPics = async (caseName) => {
     let caseFolder = `${PICS_FOLDER}/${caseName}`;
